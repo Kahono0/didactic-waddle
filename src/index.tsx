@@ -6,7 +6,7 @@ import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum';
 import { arbitrum, mainnet, polygon } from 'wagmi/chains';
 import App from './App';
-// import { createRoot } from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 
 const chains = [arbitrum, mainnet, polygon];
 const projectId = "5da12abf6f18a40401bebb83bbbedffe" // process.env.customKey
@@ -20,8 +20,8 @@ const wagmiConfig = createConfig({
   publicClient
 });
 
-const root = ReactDOM.createRoot(document.getElementById('root')!);
-// const root = createRoot(document.getElementById('root')!);
+//const root = ReactDOM.createRoot(document.getElementById('root')!);
+const root = createRoot(document.getElementById('root')!);
 root.render(
   <React.StrictMode>
     <WagmiConfig config={wagmiConfig}>
