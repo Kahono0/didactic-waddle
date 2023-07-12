@@ -39,9 +39,9 @@ function App() {
   let _window: any = window;
   let provider = _window.ethereum;
 
+  // let overrideApiUrl = 'https://stage-api.ututrust.com/identity-api/verify-address';
+  let overrideApiUrl = process.env.apiUrl + '/identity-api/verify-address';
 
-
-  let overrideApiUrl = 'https://stage-api.ututrust.com/identity-api/verify-address';
 
   let onClick = async () => {
 
