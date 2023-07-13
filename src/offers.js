@@ -11,8 +11,6 @@ export function Offers({ offers }) {
 
   return (
     <div className="offers">
-      <h2>Welcome to the UTU SDK Demo</h2>
-      <h3>Choose your provider:</h3>
       <ul>
         {
           offers.map(offer =>
@@ -28,7 +26,7 @@ export function Offers({ offers }) {
                   target-uuid={offer.id}
                   style={{ marginTop: "-20px" }} />
               </x-utu-root>
-              <br /><br /><br /><br />
+              <br />
               <x-utu-feedback-details-popup
                 api-url={apiUrl}
                 target-uuid={offer.id}

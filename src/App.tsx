@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { getToken } from "utu-sdk-example-common/";
 import { Offers } from "./offers";
-import React from "react";
+// import style from './App.module.css';
+
 
 // you Need to add the following line as the SDK does not it have its *.d.ts typing files yet:
 // @ts-ignore
@@ -34,7 +35,7 @@ const OFFERS = [
 
 
 function App() {
-  const { open, close } = useWeb3Modal()
+  const { open, isOpen, close } = useWeb3Modal()
   const [hasToken, setHasToken] = useState(false);
 
   let _window: any = window;
@@ -53,13 +54,13 @@ function App() {
   };
 
 
-  let onClick = async () => {
-
+  let onConnectToWalletClick = async () => {
     // This connects your wallet
     await open();
+  }
 
-    console.log('open() complete');
 
+  let onConnectToUtuClick = async () => {
     // This passes the wallet provider to the SDK so it can do its magic
     // It effectively logs into the UTU Trust Network services and you get a response object back
     // which encapsulates the successful log in.  Among other things it contains the JWT Token.
@@ -78,11 +79,23 @@ function App() {
   }
 
   return (
-    <>
-      <button onClick={onClick}>Connect</button>
-
+    <div style={{ backgroundColor: 'antiquewhite', padding: '20px', border: '1px solid black' }}>
+      <h2>Welcome to the UTU SDK Demo for React</h2>
+      <div>
+        (1) <button type='button' style={{ cursor: 'pointer' }}
+          className={`x-utu-btn x-utu-btn-light border-radius`}
+          onClick={onConnectToWalletClick} >Connect to Wallet</button>
+      </div>
+      <div style={{ paddingTop: '10px' }}>
+        (2) <button type='button' style={{ cursor: 'pointer' }}
+          className={`x-utu-btn x-utu-btn-light border-radius`}
+          onClick={onConnectToUtuClick}>Connect to UTU</button>
+      </div>
+      <div style={{ paddingTop: '10px' }}>
+        (3) Give or Show Feedback
+      </div>
       <Offers offers={OFFERS} />
-    </>
+    </div >
   )
 }
 
