@@ -56,7 +56,7 @@ function App() {
   let onClick = async () => {
 
     // This connects your wallet
-    open();
+    await open();
 
     console.log('open() complete');
 
