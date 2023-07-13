@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getToken } from "utu-sdk-example-common/";
+// import { getToken } from "utu-sdk-example-common/";
 import { Offers } from "./offers";
 // import style from './App.module.css';
 
