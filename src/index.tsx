@@ -13,7 +13,7 @@ import { createRoot } from 'react-dom/client';
 const chains = [arbitrum, mainnet, polygon];
 // const projectId = "5da12abf6f18a40401bebb83bbbedffe" // process.env.customKey
 
-// jd's one from https://cloud.walletconnect.com/
+// jd's one from https://cloud.walletconnect.com/ - created account with metamask
 const projectId = "ed0689b91e26b121d6a6145437c7b857";
 const { publicClient } = configureChains(chains, [w3mProvider({ projectId })])
 
