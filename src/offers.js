@@ -15,7 +15,7 @@ export function Offers({ offers }) {
         {
           offers.map(offer =>
             <li className="offer" key={offer.id}>
-              <div>{offer.name}</div>
+              <div style={{ fontWeight: 'bold' }}>{offer.name}</div>
               <x-utu-root
                 api-url={apiUrl}
                 source-uuid="user-1"
