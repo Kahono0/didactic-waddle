@@ -55,8 +55,10 @@ function App() {
 
   let onClick = async () => {
 
-    // This conncts your wallet
+    // This connects your wallet
     open();
+
+    console.log('open() complete');
 
     // This passes the wallet provider to the SDK so it can do its magic
     // It effectively logs into the UTU Trust Network services and you get a response object back
@@ -66,11 +68,13 @@ function App() {
       walletProvider: provider
     });
 
-    console.log('authDataResponse', authDataResponse);
+    console.log('Ran addressSignatureVerification and got authDataResponse', authDataResponse);
 
     // this passes the JWT token info to the SDK. Expect this SDK method to be refactored into
     // the SDK addressSignatureVerification in later versions of the SDK.
     triggerUtuIdentityDataSDKEvent(authDataResponse);
+
+    console.log('triggered event to send the authDataResponse');
   }
 
   return (
