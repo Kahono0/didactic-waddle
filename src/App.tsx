@@ -5,13 +5,14 @@ import React from "react";
 
 // you Need to add the following line as the SDK does not it have its *.d.ts typing files yet:
 // @ts-ignore
-import { addressSignatureVerification, triggerUtuIdentityDataSDKEvent } from "@ututrust/web-components";
+import { addressSignatureVerification, AuthData } from "@ututrust/web-components";
 
-import { useWeb3Modal } from '@web3modal/react'
+// @ts-ignore
+import { useWeb3Modal } from '@web3modal/react';
 
 // https://www.npmjs.com/package/dotenv
 // Adds variables defined in .env to process.env
-import 'dotenv/config'
+// import 'dotenv/config'
 
 // A list of offers to be shown to the user, such as a list of products in an e-commerce app or a 
 // list of service providers in a sharing economy app. This would typically be retrieved from the 
@@ -39,8 +40,17 @@ function App() {
   let _window: any = window;
   let provider = _window.ethereum;
 
-  // let overrideApiUrl = 'https://stage-api.ututrust.com/identity-api/verify-address';
-  let overrideApiUrl = process.env.apiUrl + '/identity-api/verify-address';
+  let overrideApiUrl = 'https://stage-api.ututrust.com/identity-api/verify-address';
+  // let overrideApiUrl = process.env.apiUrl + '/identity-api/verify-address';
+
+  const triggerUtuIdentityDataSDKEvent = (
+    identityData: AuthData
+  ): void => {
+    const event = new CustomEvent("utuIdentityDataReady", {
+      detail: identityData,
+    });
+    window.dispatchEvent(event);
+  };
 
 
   let onClick = async () => {
@@ -55,6 +65,7 @@ function App() {
       overrideApiUrl: overrideApiUrl,
       walletProvider: provider
     });
+
     console.log('authDataResponse', authDataResponse);
 
     // this passes the JWT token info to the SDK. Expect this SDK method to be refactored into
@@ -65,6 +76,7 @@ function App() {
   return (
     <>
       <button onClick={onClick}>Connect</button>
+
       <Offers offers={OFFERS} />
     </>
   )
