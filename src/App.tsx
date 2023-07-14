@@ -38,9 +38,6 @@ function App() {
   const { open, isOpen, close } = useWeb3Modal()
   const [hasToken, setHasToken] = useState(false);
 
-  let _window: any = window;
-  let provider = _window.ethereum;
-
   let overrideApiUrl = 'https://stage-api.ututrust.com/identity-api/verify-address';
   // let overrideApiUrl = process.env.apiUrl + '/identity-api/verify-address';
 
@@ -61,6 +58,10 @@ function App() {
 
 
   let onConnectToUtuClick = async () => {
+    let _window: any = window;
+    let provider = _window.ethereum;
+    console.log('provider: ', provider);
+
     // This passes the wallet provider to the SDK so it can do its magic
     // It effectively logs into the UTU Trust Network services and you get a response object back
     // which encapsulates the successful log in.  Among other things it contains the JWT Token.
