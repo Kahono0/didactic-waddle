@@ -38,8 +38,10 @@ function App() {
   const { open, isOpen, close } = useWeb3Modal()
   const [hasToken, setHasToken] = useState(false);
 
-  let overrideApiUrl = 'https://stage-api.ututrust.com/identity-api/verify-address';
+  // let overrideApiUrl = 'https://stage-api.ututrust.com/identity-api/verify-address';
   // let overrideApiUrl = process.env.apiUrl + '/identity-api/verify-address';
+
+  let overrideApiUrl = 'https://stage-api.ututrust.com';
 
   const triggerUtuIdentityDataSDKEvent = (
     identityData: AuthData
