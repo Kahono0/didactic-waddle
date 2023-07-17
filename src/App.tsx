@@ -65,10 +65,9 @@ function App() {
     // This passes the wallet provider to the SDK so it can do its magic
     // It effectively logs into the UTU Trust Network services and you get a response object back
     // which encapsulates the successful log in.  Among other things it contains the JWT Token.
-    let authDataResponse = await addressSignatureVerification({
-      overrideApiUrl: overrideApiUrl,
-      walletProvider: provider
-    });
+    let authDataResponse = await addressSignatureVerification(
+      overrideApiUrl
+    );
 
     console.log('Ran addressSignatureVerification and got authDataResponse', authDataResponse);
 
