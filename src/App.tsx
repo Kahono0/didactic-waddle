@@ -1,6 +1,6 @@
 import { useState } from "react";
 // import { getToken } from "utu-sdk-example-common/";
-import { Offers } from "./offers";
+import Offers from "./Offers";
 // import style from './App.module.css';
 
 

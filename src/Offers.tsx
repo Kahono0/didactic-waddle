@@ -1,10 +1,27 @@
 import '@ututrust/web-components';
+import { ethers } from "ethers";
 
 // https://www.npmjs.com/package/dotenv
 // Adds variables defined in .env to process.env
 // import 'dotenv/config'
 
-export function Offers({ offers }) {
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      "x-utt-balance": any;
+      "x-utu-app-link": any;
+      "x-utu-wallet-disconnect": any;
+      "x-utu-root": any;
+      "x-utu-recommendation": any;
+      "x-utu-feedback-details-popup": any;
+      "x-utu-feedback-form-popup": any;
+    }
+  }
+}
+
+export default function Offers(props: any) {
+
+  let offers = props.offers;
 
   // was using process.env.apiUrl but does not work for time being
   let apiUrl = 'https://stage-api.ututrust.com';
@@ -48,37 +65,42 @@ export function Offers({ offers }) {
   web page you may wish the target-type to be a domain.  Note you can add any description here.
   */
 
+  let getId = (assetIdentifier: string) => {
+    return ethers.utils
+      .id(assetIdentifier)
+      .slice(0, 40 + 2)
+      .toLowerCase()
+  }
+
+  // @ts-ignore
   return (
     <div className="offers">
       <ul>
         {
-          offers.map(offer =>
-            <x-utu-root
-              api-url={apiUrl}
-              source-uuid={walletAddress}
-              target-type="domain"
-              target-uuids={offer.id}
-            >
-              <li className="offer" key={offer.id}>
-                <div style={{ fontWeight: 'bold' }}>{offer.name}</div>
-
+          offers.map((offer: any) =>
+            <li className="offer" key={offer.id}>
+              <div style={{ fontWeight: 'bold' }}>{offer.name}</div>
+              <x-utu-root
+                api-url={apiUrl}
+                source-uuid={walletAddress}
+                target-type="domain"
+                target-uuids={getId(offer.id)}>
                 <x-utu-recommendation
-                  target-uuid={offer.id}
+                  target-uuid={getId(offer.id)}
                   style={{ marginTop: "-20px" }} />
-                <br />
-                <x-utu-feedback-details-popup
-                  api-url={apiUrl}
-                  target-uuid={offer.id.toLowerCase()}
-                  source-uuid={walletAddress}
-                />
-                <x-utu-feedback-form-popup
-                  api-url={apiUrl}
-                  source-uuid={walletAddress}
-                  target-uuid={offer.id.toLowerCase()}
-                  transaction-id={offer.id} />
-
-              </li>
-            </x-utu-root>
+              </x-utu-root>
+              <br />
+              <x-utu-feedback-details-popup
+                api-url={apiUrl}
+                target-uuid={getId(offer.id)}
+                source-uuid={walletAddress}
+              />
+              <x-utu-feedback-form-popup
+                api-url={apiUrl}
+                source-uuid={walletAddress}
+                target-uuid={getId(offer.id)}
+                transaction-id={5} />
+            </li>
           )
         }
       </ul>
