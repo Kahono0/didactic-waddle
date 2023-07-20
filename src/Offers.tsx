@@ -66,6 +66,7 @@ export default function Offers(props: any) {
   */
 
   let getId = (assetIdentifier: string) => {
+
     return ethers.utils
       .id(assetIdentifier)
       .slice(0, 40 + 2)

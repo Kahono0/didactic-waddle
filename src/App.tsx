@@ -64,7 +64,7 @@ function App() {
     await open();
   }
 
-  const initEntity = async (data: AuthData) => {
+  const initEntity = async (data: AuthData, offer: any) => {
     await fetch(overrideApiUrl + "/core-api-v2/entity", {
       method: "POST",
       headers: {
@@ -73,16 +73,20 @@ function App() {
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: JSON.stringify({
-        name: OFFERS[0].id,
+        // name: OFFERS[0].id,
+        name: offer.id,
         //type: "domain",
         type: "provider",
         ids: {
           //uuid: OFFERS[0].id,
+          // uuid: offer.id,
           // address: OFFERS[0].id,
+
           uuid: ethers.utils
-            .id(OFFERS[0].id)
+            .id(offer.id)
             .slice(0, 40 + 2)
             .toLowerCase(),
+
           //urlz: OFFERS[0].id,
         },
         // image:
@@ -114,9 +118,15 @@ function App() {
       overrideApiUrl
     );
 
+    if (authDataResponse) {
+      setHasToken(true);
+    }
+
     console.log('Ran addressSignatureVerification and got authDataResponse', authDataResponse);
 
-    await initEntity(authDataResponse);
+    for (let i = 0; i < OFFERS.length; i++) {
+      await initEntity(authDataResponse, OFFERS[i]);
+    }
 
     // this passes the JWT token info to the SDK. Expect this SDK method to be refactored into
     // the SDK addressSignatureVerification in later versions of the SDK.
@@ -141,8 +151,10 @@ function App() {
       <div style={{ paddingTop: '10px' }}>
         (3) Give or Show Feedback
       </div>
-      <Offers offers={OFFERS} />
-    </div >
+      {
+        hasToken ? <Offers offers={OFFERS} /> : ''
+      }
+    </div>
   )
 }
 
