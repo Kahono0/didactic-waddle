@@ -70,6 +70,8 @@ export default function Offers(props: any) {
       .id(assetIdentifier)
       .slice(0, 40 + 2)
       .toLowerCase()
+
+    // return assetIdentifier
   }
 
   // @ts-ignore
@@ -83,7 +85,7 @@ export default function Offers(props: any) {
               <x-utu-root
                 api-url={apiUrl}
                 source-uuid={walletAddress}
-                target-type="domain"
+                target-type="provider"
                 target-uuids={getId(offer.id)}>
                 <x-utu-recommendation
                   target-uuid={getId(offer.id)}

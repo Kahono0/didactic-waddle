@@ -3,6 +3,8 @@ import { useState } from "react";
 import Offers from "./Offers";
 // import style from './App.module.css';
 
+import { ethers } from "ethers";
+
 
 // you Need to add the following line as the SDK does not it have its *.d.ts typing files yet:
 // @ts-ignore
@@ -21,15 +23,19 @@ import { useWeb3Modal } from '@web3modal/react';
 const OFFERS = [
   {
     name: "Paul",
-    id: "provider-1"
+    // id: "app.sushi.com"
+    // id: "www.cat.com"
+    id: "provider_1"
   },
   {
     name: "Jane",
-    id: "provider-2"
+    // id: "localhost:3000"
+    id: "provider_2"
   },
   {
     name: "Ali",
-    id: "provider-3"
+    // id: "www.coinbase.com"
+    id: "provider_3"
   }
 ];
 
@@ -58,6 +64,43 @@ function App() {
     await open();
   }
 
+  const initEntity = async (data: AuthData) => {
+    await fetch(overrideApiUrl + "/core-api-v2/entity", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${data.access_token}`,
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify({
+        name: OFFERS[0].id,
+        //type: "domain",
+        type: "provider",
+        ids: {
+          //uuid: OFFERS[0].id,
+          // address: OFFERS[0].id,
+          uuid: ethers.utils
+            .id(OFFERS[0].id)
+            .slice(0, 40 + 2)
+            .toLowerCase(),
+          //urlz: OFFERS[0].id,
+        },
+        // image:
+        //  "https://i0.wp.com/utu.io/wp-content/uploads/job-manager-uploads/company_logo/2020/12/cropped-UTU-LG-FV.png?fit=192%2C192&ssl=1",
+      }),
+    })
+      .then((res) => {
+        // If we sent the current utu token and we got an unauthorized error,
+        // Prompt user to sign in again and then reload the page
+
+        return res;
+      })
+      .catch((err) => {
+        console.log("Failed to init entity on utu browser extension");
+        console.log(err);
+      });
+  };
+
 
   let onConnectToUtuClick = async () => {
     let _window: any = window;
@@ -72,6 +115,8 @@ function App() {
     );
 
     console.log('Ran addressSignatureVerification and got authDataResponse', authDataResponse);
+
+    await initEntity(authDataResponse);
 
     // this passes the JWT token info to the SDK. Expect this SDK method to be refactored into
     // the SDK addressSignatureVerification in later versions of the SDK.
