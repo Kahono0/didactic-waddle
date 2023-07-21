@@ -129,18 +129,19 @@ In offers.js you will see code like:
 ```
 <ul>
     {
-      offers.map((offer: any) =>
-        <li className="offer" key={offer.id}>
-          <div style={{ fontWeight: 'bold' }}>{offer.name}</div>
-          <x-utu-root
+      <x-utu-root
             api-url={apiUrl}
             source-uuid={walletAddress}
             target-type="domain"
             target-uuids={getId(offer.id)}>
+      offers.map((offer: any) =>
+        <li className="offer" key={offer.id}>
+          <div style={{ fontWeight: 'bold' }}>{offer.name}</div>
+          
             <x-utu-recommendation
               target-uuid={getId(offer.id)}
               style={{ marginTop: "-20px" }} />
-          </x-utu-root>
+          
           <br />
           <x-utu-feedback-details-popup
             api-url={apiUrl}
@@ -153,6 +154,7 @@ In offers.js you will see code like:
             target-uuid={getId(offer.id)}
             transaction-id={5} />
         </li>
+        </x-utu-root>
       )
     }
   </ul>

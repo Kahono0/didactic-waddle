@@ -1,9 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
 import './index.css';
 
 import { Web3Modal } from '@web3modal/react'
-import reportWebVitals from './reportWebVitals';
 import { configureChains, createConfig, WagmiConfig } from 'wagmi';
 import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum';
 import { arbitrum, mainnet, polygon } from 'wagmi/chains';
@@ -24,9 +22,8 @@ const wagmiConfig = createConfig({
 });
 
 const ethereumClient = new EthereumClient(wagmiConfig, chains)
-
-//const root = ReactDOM.createRoot(document.getElementById('root')!);
 const root = createRoot(document.getElementById('root')!);
+
 root.render(
   <React.StrictMode>
     <WagmiConfig config={wagmiConfig}>
@@ -36,9 +33,3 @@ root.render(
   </React.StrictMode>
 );
 
-// alert(process.env.REACT_APP_API_URL);
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
