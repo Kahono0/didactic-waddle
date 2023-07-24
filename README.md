@@ -424,6 +424,5 @@ Currently you need to code this function yourself and pass it the jwt token with
 
 In the interests of keeping this example simple we did not store the JWT token in storage.  Note
 the JWT token came back from the backend when the addressSignatureVerification(..) function was
-called.  This JWT token is used in all calls to the backend.  So that users do not repeated need
-to login into UTU everytime the web page refreshes we could store the JWT token in web browser
-storage.
+called.  This JWT token is used in all calls to the backend.  So that users do not need to login
+into UTU everytime the web page refreshes we could store the JWT token in web browser storage.
