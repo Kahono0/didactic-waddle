@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 
 declare global {
   namespace JSX {
+    // prevents typescript errors for the tags
     interface IntrinsicElements {
       "x-utt-balance": any;
       "x-utu-app-link": any;

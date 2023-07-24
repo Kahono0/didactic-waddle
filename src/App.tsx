@@ -91,7 +91,7 @@ function App() {
       setHasToken(true);
     }
 
-    // The initEntity call is necessary to map the offers in a remote db
+    // The initEntity call is necessary to map the offers in a remote neo4j db
     for (let i = 0; i < OFFERS.length; i++) {
       await initEntity(authDataResponse, OFFERS[i]);
     }

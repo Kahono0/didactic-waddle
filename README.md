@@ -127,37 +127,37 @@ Then:
 In offers.js you will see code like:
 
 ```
-<ul>
+<div className="offers">
+  <ul>
     {
-      <x-utu-root
-            api-url={apiUrl}
-            source-uuid={walletAddress}
-            target-type="domain"
-            target-uuids={getId(offer.id)}>
       offers.map((offer: any) =>
         <li className="offer" key={offer.id}>
           <div style={{ fontWeight: 'bold' }}>{offer.name}</div>
-          
+          <x-utu-root
+            api-url={overrideApiUrl}
+            source-uuid={walletAddress}
+            target-type="provider"
+            target-uuids={getId(offer.id)}>
             <x-utu-recommendation
               target-uuid={getId(offer.id)}
               style={{ marginTop: "-20px" }} />
-          
+          </x-utu-root>
           <br />
           <x-utu-feedback-details-popup
-            api-url={apiUrl}
+            api-url={overrideApiUrl}
             target-uuid={getId(offer.id)}
             source-uuid={walletAddress}
           />
           <x-utu-feedback-form-popup
-            api-url={apiUrl}
+            api-url={overrideApiUrl}
             source-uuid={walletAddress}
             target-uuid={getId(offer.id)}
             transaction-id={5} />
         </li>
-        </x-utu-root>
       )
     }
   </ul>
+</div>
 ```
 
 ### Explanation Tags
@@ -183,16 +183,25 @@ tags.  Each x-utu-recommendation shows recommentation information for a given ta
 
 This is a notification component that shows if the current asset you are interested in has any
 feedback / signal associated with it.  The idea is that if this notification component shows
-that there is signal that the user can make the decision whether or not they click the button to show the feedback.
+that there is signal that the user can make the decision whether or not they click the button to 
+show the feedback.
 
 #### x-utu-feedback-details-popup
 
-This shows feedback information of a certain target asset type.  Note that the source-uuid is passed as an attribute to the tag.  The source-uuid in this example is a user identifier - in this example it is a wallet address.
+This shows feedback information of a certain target asset type.  Note that the source-uuid is passed 
+as an attribute to the tag.  The source-uuid in this example is a user identifier - in this example 
+it is a wallet address.  The reason the source-uuid is passed is that feedback signal is shown
+for the others connected to the user via social networks such as telegram or twitter. 
+
+The target-uuid is the unique id of the asset the user wants to see feedback on.
 
 ##### x-utu-feedback-form-popup
 
-@todo
-
+This shows a popup form to allow the user to comment on a certain target asset type.  Note that
+the source-uuid in this example is a user identifier.  It is the wallet address of the user giving
+feedback on a certain target asset.  The target asset is specified by the target-uuid.  In this 
+example the target-uuid is the unique id of the provider of a service.   Imagine that the provider 
+could be something like netflix.
 
 ### Explanation Attributes
 
@@ -234,7 +243,76 @@ web page you may wish the target-type to be a domain.  Note you can add any valu
 
 ## Explanation of Wallet Connect Code
 
-@todo
+Wallet Connect is a library that allows you to connect to different crypto wallets including mobile
+wallets that scan qrcodes.
+
+There are few steps to integrating with Wallet Connect:
+
+* Import Web3Modal from @web3modal/react.  Web3Modal is a GUI component provided by Wallet Connect 2
+to allow the user to connect to web browser wallets or remote mobile wallets via a qrCode.
+
+* Import functions from  wagmi such as:  configureChains, createConfig, WagmiConfig 
+
+* Import functions from @web3modal/ethereum such as: EthereumClient, w3mConnectors, w3mProvider
+
+* Import functions from wagmi/chains such as:  arbitrum, mainnet, polygon
+
+* Get a Wallet Connect projectId from https://cloud.walletconnect.com/sign-in
+
+* Configure chains:
+
+```
+const { publicClient } = configureChains(chains, [w3mProvider({ projectId })])
+```
+
+* Create wagmiConfig:
+
+```
+const wagmiConfig = createConfig({
+  autoConnect: true,
+  connectors: w3mConnectors({ projectId, chains }),
+  publicClient
+});
+```
+
+* Create an ethereumClient:
+
+const ethereumClient = new EthereumClient(wagmiConfig, chains)
+
+* Wrap your react App tag with WagmiConfig and add the Web3Modal tag:
+
+```
+root.render(
+  <React.StrictMode>
+    <WagmiConfig config={wagmiConfig}>
+      <App />
+    </WagmiConfig>
+    <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
+  </React.StrictMode>
+);
+```
+
+Finally in App.tsx you can create a button for users to click to connect to their wallet:
+
+```
+<button type='button' style={{ cursor: 'pointer' }}
+          className={`x-utu-btn x-utu-btn-light border-radius`}
+          onClick={onConnectToWalletClick} >Connect to Wallet</button>
+```
+
+The implementation of the onConnectToWalletClick function looks like:
+
+let onConnectToWalletClick = async () => {
+    // This connects your wallet
+    await open();
+  }
+
+Note the open() function is imported from a Web3Modal hook:
+
+```
+const { open } = useWeb3Modal()
+```
+
 
 ## Explanation of SDK Code
 
@@ -246,10 +324,10 @@ There are 3 calls we need to make:
 (iii) Call initEntity() - a function you need to code and create yourself
 ```
 
-In the future triggerUtuIdentityDataSDKEvent() will be moved into the SDK and will be called by
-the implementation of addressSignatureVerification().
+In the future triggerUtuIdentityDataSDKEvent() will be moved into the SDK and will be called by the implementation of addressSignatureVerification().
 
 In the future initEntity() will be moved into the SDK and you can import the function and call it.
+
 For the time being you need to code this yourself.
 
 The 3 calls will now be explained in turn:
@@ -291,8 +369,61 @@ the UTU backend.  The UTU backend returns an authDataResponse that contains the 
 
 ### triggerUtuIdentityDataSDKEvent()
 
+This function is used to pass the jwtToken to all parts of the SDK.  
+
+```
+const triggerUtuIdentityDataSDKEvent = (
+    identityData: AuthData
+  ): void => {
+    const event = new CustomEvent("utuIdentityDataReady", {
+      detail: identityData,
+    });
+    window.dispatchEvent(event);
+  };
+
+```
+
+### initEntity()
+
+This function creates relationships in the neo4j database:
+
+```
+const initEntity = async (data: AuthData, offer: any) => {
+    await fetch(overrideApiUrl + "/core-api-v2/entity", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${data.access_token}`,
+      },
+      body: JSON.stringify({
+        name: offer.id,
+        type: "provider",
+        ids: {
+          uuid: ethers.utils
+            .id(offer.id)
+            .slice(0, 40 + 2)
+            .toLowerCase(),
+        },
+        // image:
+        //  "https://i0.wp.com/utu.io/wp-content/uploads/job-manager-uploads/company_logo/2020/12/cropped-UTU-LG-FV.png?fit=192%2C192&ssl=1",
+      }),
+    })
+      .then((res) => {
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+```
+
+Currently you need to code this function yourself and pass it the jwt token within AuthData.  However later this function will be moved into the SDK and you can just import and call it.
 
 
+## Further Optimisations
 
-
- 
+In the interests of keeping this example simple we did not store the JWT token in storage.  Note
+the JWT token came back from the backend when the addressSignatureVerification(..) function was
+called.  This JWT token is used in all calls to the backend.  So that users do not repeated need
+to login into UTU everytime the web page refreshes we could store the JWT token in web browser
+storage.
