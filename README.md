@@ -106,6 +106,8 @@ The app looks like:
 
 ![App Screen Shot](Images/react_app_screenshot.png)  
 
+Note that Step (3) is only shown once you have connected to UTU in step (2).
+
 
 ### Step 7: End User Instructions
 
