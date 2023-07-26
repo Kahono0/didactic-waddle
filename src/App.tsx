@@ -29,7 +29,7 @@ const OFFERS = [
 
 
 function App() {
-  const { open, isOpen, close } = useWeb3Modal()
+  const { open } = useWeb3Modal()
   const [hasToken, setHasToken] = useState(false);
   let overrideApiUrl = process.env.REACT_APP_API_URL;
 
@@ -82,7 +82,7 @@ function App() {
     // It effectively logs into the UTU Trust Network services and you get a response object back
     // which encapsulates the successful log in.  Among other things it contains the JWT Token.
     let authDataResponse = await addressSignatureVerification(
-      overrideApiUrl
+      // overrideApiUrl
     );
 
     // This instructs the GUI that it can show the Recommendations, show feedback and give feedback

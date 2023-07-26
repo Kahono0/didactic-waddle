@@ -136,7 +136,6 @@ In offers.js you will see code like:
         <li className="offer" key={offer.id}>
           <div style={{ fontWeight: 'bold' }}>{offer.name}</div>
           <x-utu-root
-            api-url={overrideApiUrl}
             source-uuid={walletAddress}
             target-type="provider"
             target-uuids={getId(offer.id)}>
@@ -146,12 +145,10 @@ In offers.js you will see code like:
           </x-utu-root>
           <br />
           <x-utu-feedback-details-popup
-            api-url={overrideApiUrl}
             target-uuid={getId(offer.id)}
             source-uuid={walletAddress}
           />
           <x-utu-feedback-form-popup
-            api-url={overrideApiUrl}
             source-uuid={walletAddress}
             target-uuid={getId(offer.id)}
             transaction-id={5} />
@@ -161,6 +158,48 @@ In offers.js you will see code like:
   </ul>
 </div>
 ```
+
+Note that the  following tags:
+
+```
+x-utu-root
+x-utu-feedback-details-popup
+x-utu-feedback-form-popup
+```
+
+can optionally have the following attribute added in addition:
+
+```
+api-url={overrideApiUrl}
+```
+
+The staging base url is:
+
+```
+https://stage-api.ututrust.com
+```
+
+The production base url is:
+
+```
+https://api.ututrust.com
+```
+
+By default the urls are set to staging so you do not need to set them if you want staging.
+
+To switch to production you have 2 options:
+
+```
+(i) Add the following code:
+
+  // @ts-ignore
+  window.xUtuConfig = {}
+  // @ts-ignore
+  xUtuConfig.production = true;
+
+(ii) Add the api-url attribute to the above mention tags and point it to production
+```
+
 
 ### Explanation Tags
 
@@ -420,7 +459,6 @@ const initEntity = async (data: AuthData, offer: any) => {
 ```
 
 Currently you need to code this function yourself and pass it the jwt token within AuthData.  However later this function will be moved into the SDK and you can just import and call it.
-
 
 ## Further Optimisations
 

@@ -27,7 +27,6 @@ let getId = (assetIdentifier: string) => {
 
 export default function Offers(props: any) {
   let offers = props.offers;
-  let overrideApiUrl = process.env.REACT_APP_API_URL;
   let _window: any = window;
   let provider = _window.ethereum;
   let walletAddress = provider.selectedAddress;
@@ -41,7 +40,6 @@ export default function Offers(props: any) {
             <li className="offer" key={offer.id}>
               <div style={{ fontWeight: 'bold' }}>{offer.name}</div>
               <x-utu-root
-                api-url={overrideApiUrl}
                 source-uuid={walletAddress}
                 target-type="provider"
                 target-uuids={getId(offer.id)}>
@@ -51,12 +49,10 @@ export default function Offers(props: any) {
               </x-utu-root>
               <br />
               <x-utu-feedback-details-popup
-                api-url={overrideApiUrl}
                 target-uuid={getId(offer.id)}
                 source-uuid={walletAddress}
               />
               <x-utu-feedback-form-popup
-                api-url={overrideApiUrl}
                 source-uuid={walletAddress}
                 target-uuid={getId(offer.id)}
                 transaction-id={5} />
