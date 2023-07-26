@@ -466,3 +466,11 @@ In the interests of keeping this example simple we did not store the JWT token i
 the JWT token came back from the backend when the addressSignatureVerification(..) function was
 called.  This JWT token is used in all calls to the backend.  So that users do not need to login
 into UTU everytime the web page refreshes we could store the JWT token in web browser storage.
+
+## Other Resources Links
+
+The SDK also has its own docs at:
+
+```
+https://gitlab.com/ututrust/api-sdk/utu-trust-sdk/-/blob/main/packages/utu-web-components/README.md?ref_type=heads
+```
