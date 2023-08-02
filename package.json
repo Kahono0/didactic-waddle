@@ -10,7 +10,7 @@
     "@types/node": "^20.3.3",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
-    "@ututrust/web-components": "^2.0.13",
+    "@ututrust/web-components": "^2.0.14",
     "@web3modal/ethereum": "^2.6.2",
     "@web3modal/react": "^2.6.2",
     "dotenv": "^16.3.1",
