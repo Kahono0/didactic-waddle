@@ -38,7 +38,8 @@ export default function Articles(props: any) {
     <div className="articles">
       <ul>
         {
-          articles.map((article: any) =>
+          articles.map((article: any) =>{
+            return(
           <>
           <hr />
             <div className="article" key={article.id}>
@@ -69,7 +70,7 @@ export default function Articles(props: any) {
             </div>
             </>
           )
-        }
+        })}
       </ul>
     </div>
   );
