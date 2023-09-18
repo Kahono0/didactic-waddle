@@ -35,7 +35,7 @@ export default function Articles(props: any) {
 
   // @ts-ignore
   return (
-    <div className="offers">
+    <div className="articles">
       <ul>
         {
           articles.map((article: any) =>

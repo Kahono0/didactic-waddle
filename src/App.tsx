@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useState } from 'react';
 import { ethers } from "ethers";
+import { create_UUID } from "./lib";
 
-// you Need to add the following line as the SDK does not it have its *.d.ts typing files yet:
 // @ts-ignore
 import { addressSignatureVerification, AuthData } from "@ututrust/web-components";
 
@@ -10,9 +10,6 @@ import { useWeb3Modal } from '@web3modal/react';
 import Articles from "./Articles";
 import { TARGET_TYPE } from "./constants";
 
-// A list of offers to be shown to the user, such as a list of products in an e-commerce app or a
-// list of service providers in a sharing economy app. This would typically be retrieved from the
-// app's backend. In this example provider_1 could be something like netflix.
 const ARTICLES = [
   {
     title: "Maize farming",
@@ -31,13 +28,13 @@ const ARTICLES = [
   },
 ];
 
-function Post() {
+function Post(props: any) {
     return (
         <div className="post">
             <h2> Share something with the community</h2>
-            <form>
-                <input type="text" placeholder="Enter title here" />
-                <textarea placeholder="Tell us something..." rows={30} />
+            <form onSubmit={props.handleSubmit}>
+                <input type="text" name="title" placeholder="Enter title here" />
+                <textarea name="text" placeholder="Tell us something..." rows={20} />
                 <button type="submit" className="post-submit">Post</button>
             </form>
         </div>
@@ -49,6 +46,7 @@ function App() {
   const { open } = useWeb3Modal()
   const [hasToken, setHasToken] = useState(false);
   const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [articles, setArticles] = useState(ARTICLES);
   let overrideApiUrl = process.env.REACT_APP_API_URL;
 
 
@@ -89,7 +87,7 @@ function App() {
     await open();
   }
 
-  const initEntity = async (data: AuthData, offer: any) => {
+  const initEntity = async (data: AuthData, article: any) => {
     await fetch(overrideApiUrl + "/core-api-v2/entity", {
       method: "POST",
       headers: {
@@ -97,11 +95,11 @@ function App() {
         authorization: `Bearer ${data.access_token}`,
       },
       body: JSON.stringify({
-        name: offer.id,
+        name: article.id,
         type: TARGET_TYPE,
         ids: {
           uuid: ethers.utils
-            .id(offer.id)
+            .id(article.id)
             .slice(0, 40 + 2)
             .toLowerCase(),
         },
@@ -126,6 +124,8 @@ function App() {
       // overrideApiUrl
     );
 
+    window.localStorage.setItem("utuAuthData", JSON.stringify(authDataResponse));
+
     // This instructs the GUI that it can show the Recommendations, show feedback and give feedback
     // screens.
     if (authDataResponse) {
@@ -133,14 +133,35 @@ function App() {
     }
 
     // The initEntity call is necessary to map the offers in a remote neo4j db
-    for (let i = 0; i < ARTICLES.length; i++) {
-      await initEntity(authDataResponse, ARTICLES[i]);
+    for (let i = 0; i < articles.length; i++) {
+      await initEntity(authDataResponse, articles[i]);
     }
 
     // this passes the JWT token info to all parts of the SDK. Expect this SDK method to be
     // refactored into the SDK addressSignatureVerification in later versions of the SDK.
     triggerUtuIdentityDataSDKEvent(authDataResponse);
   }
+
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+
+        const title = e.target.title.value;
+        const text = e.target.text.value;
+        const id = title;
+
+        const article = {
+            title,
+            text,
+            id
+        }
+
+        await initEntity(JSON.parse(window.localStorage.getItem("utuAuthData") || ""), article);
+
+        setArticles([article, ...articles]);
+
+        e.target.reset();
+    }
+
 
   return (
   <>
@@ -161,8 +182,8 @@ function App() {
     <>
       <h2>Here is what farmers have to say</h2>
       <div className="home">
-         <Articles articles={ARTICLES} />
-         <Post />
+         <Articles articles={articles} />
+         <Post handleSubmit={handleSubmit}/>
         </div>
     </>
   }
