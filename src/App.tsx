@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { ethers } from "ethers";
-import { create_UUID } from "./lib";
+import { create_UUID, post_article } from "./lib";
+import { useEffect } from "react";
+import { get_articles } from "./lib";
+import { Article } from './types';
 
 // @ts-ignore
 import { addressSignatureVerification, AuthData } from "@ututrust/web-components";
@@ -14,17 +17,17 @@ const ARTICLES = [
   {
     title: "Maize farming",
     text: "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.",
-    id: "farmin_1"
+    id: "farmin_1",
   },
   {
     title: "Beans farming",
     text: "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.",
-    id: "farmin_2"
+    id: "farmin_2",
   },
   {
     title: "Wheat farming",
     text: "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.",
-    id: "farmin_3"
+    id: "farmin_3",
   },
 ];
 
@@ -46,9 +49,15 @@ function App() {
   const { open } = useWeb3Modal()
   const [hasToken, setHasToken] = useState(false);
   const [isWalletConnected, setIsWalletConnected] = useState(false);
-  const [articles, setArticles] = useState(ARTICLES);
+  const [articles, setArticles] = useState<Article[]>([]);
   let overrideApiUrl = process.env.REACT_APP_API_URL;
 
+
+    useEffect(() => {
+        get_articles().then((res) => {
+            setArticles([...res, ...articles]);
+        });
+    }, []);
 
   //check if metamasl is installed
   const isMetaMaskInstalled = () => {
@@ -111,7 +120,7 @@ function App() {
         return res;
       })
       .catch((err) => {
-        console.log(err);
+        return err;
       });
   };
 
@@ -132,11 +141,6 @@ function App() {
       setHasToken(true);
     }
 
-    // The initEntity call is necessary to map the offers in a remote neo4j db
-    for (let i = 0; i < articles.length; i++) {
-      await initEntity(authDataResponse, articles[i]);
-    }
-
     // this passes the JWT token info to all parts of the SDK. Expect this SDK method to be
     // refactored into the SDK addressSignatureVerification in later versions of the SDK.
     triggerUtuIdentityDataSDKEvent(authDataResponse);
@@ -147,17 +151,20 @@ function App() {
 
         const title = e.target.title.value;
         const text = e.target.text.value;
-        const id = title;
+        const id = create_UUID();
 
         const article = {
             title,
             text,
-            id
+            id,
+            identity: ""
         }
 
         await initEntity(JSON.parse(window.localStorage.getItem("utuAuthData") || ""), article);
 
         setArticles([article, ...articles]);
+
+        post_article(article);
 
         e.target.reset();
     }

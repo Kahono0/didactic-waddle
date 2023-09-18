@@ -1,3 +1,5 @@
+import { BASE_URL } from "./constants";
+import { Article } from "./types";
 function create_UUID(){
     var dt = new Date().getTime();
     var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -8,4 +10,37 @@ function create_UUID(){
     return uuid;
 }
 
-export { create_UUID };
+async function post_article(article: Article) {
+    const response = await fetch(`${BASE_URL}/api/article`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(article)
+    });
+    return response.json();
+}
+
+async function get_articles(): Promise<Article[]> {
+    const response = await fetch(`${BASE_URL}/api/article`);
+    return response.json();
+}
+
+async function get_article(id: string) {
+    const response = await fetch(`${BASE_URL}/api/article/${id}`);
+    return response.json();
+}
+
+async function put_article(article: Article) {
+    const response = await fetch(`${BASE_URL}/api/article/${article.id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(article)
+    });
+    return response.json();
+}
+
+
+export { create_UUID, post_article  , get_articles, get_article, put_article };
