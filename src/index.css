@@ -1,12 +1,11 @@
 body {
   margin: 50px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
     background-color: rgba(255, 221, 51, 0.15);
-    min-height: 100vh;
+    height: 100vh;
+    position: fixed;
 }
 
 code {
@@ -14,11 +13,18 @@ code {
     monospace;
 }
 
-.offer {
+.home{
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    gap: 2rem;
 }
+
+.article p {
+    letter-spacing: 0.5px;
+    line-height: 1.5;
+    font-size: 1.2rem;
+    font-weight: 300;
+}
+
 .offers{
     width: 70%;
     margin: 0;
@@ -37,7 +43,30 @@ code {
     width: 300px;
     display: flex;
     flex-direction: column;
-    }
+}
+
+.post {
+    width: 30%;
+    margin: 0;
+    padding: 0 1rem;
+}
+
+.post form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.post button{
+    background-color: #FFDD33;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+}
 
 
 input[type=text] {
@@ -48,6 +77,30 @@ input[type=text] {
   border-left: 30px;
   width: 500px;
   font-weight: 300;
+}
+
+.post input {
+    width: 100%;
+    background-color: white;
+    border:2px solid #FFDD33;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.post textarea {
+    width: 100%;
+    background-color: white;
+    border:2px solid #FFDD33;
+    border-radius: 5px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.post textarea:focus, input:focus {
+    outline: none;
 }
 
 .get-started-cont {

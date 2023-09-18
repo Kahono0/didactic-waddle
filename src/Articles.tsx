@@ -42,7 +42,7 @@ export default function Articles(props: any) {
           <>
           <hr />
             <div className="article" key={article.id}>
-              <div style={{ fontWeight: 'bold' }}>{article.title}</div>
+              <h1 style={{ fontWeight: 'bold' }}>{article.title}</h1>
               <p>{article.text}</p>
               <div className='feedback'>
               <x-utu-root

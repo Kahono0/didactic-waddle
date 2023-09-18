@@ -31,6 +31,19 @@ const ARTICLES = [
   },
 ];
 
+function Post() {
+    return (
+        <div className="post">
+            <h2> Share something with the community</h2>
+            <form>
+                <input type="text" placeholder="Enter title here" />
+                <textarea placeholder="Tell us something..." rows={30} />
+                <button type="submit" className="post-submit">Post</button>
+            </form>
+        </div>
+    )
+}
+
 
 function App() {
   const { open } = useWeb3Modal()
@@ -147,7 +160,10 @@ function App() {
     :
     <>
       <h2>Here is what farmers have to say</h2>
+      <div className="home">
          <Articles articles={ARTICLES} />
+         <Post />
+        </div>
     </>
   }
       </>
