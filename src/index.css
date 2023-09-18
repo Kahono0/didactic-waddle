@@ -4,6 +4,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
     background-color: rgba(255, 221, 51, 0.15);
+    width: 100%;
     height: 100vh;
     position: fixed;
 }
@@ -14,6 +15,7 @@ code {
 }
 
 .home{
+    width: 100%;
     display: flex;
     gap: 2rem;
 }
@@ -26,7 +28,7 @@ code {
 }
 
 .articles{
-    width: 70%;
+    width: 65%;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -55,7 +57,7 @@ code {
 }
 
 .post {
-    width: 30%;
+    width: 25%;
     margin: 0;
     padding: 0 1rem;
 }

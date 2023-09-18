@@ -54,9 +54,12 @@ function App() {
 
 
     useEffect(() => {
-        get_articles().then((res) => {
-            setArticles([...res, ...articles]);
-        });
+        if (window.localStorage.getItem("utuAuthData")) {
+            setHasToken(true);
+            get_articles().then((res) => {
+                setArticles([...res, ...articles]);
+            });
+        }
     }, []);
 
   //check if metamasl is installed
@@ -164,7 +167,13 @@ function App() {
 
         setArticles([article, ...articles]);
 
-        post_article(article);
+        post_article(article).then((res) => {
+            if (res.status < 400) {
+                console.log("success");
+            } else {
+                console.log("error");
+            }
+        });
 
         e.target.reset();
     }

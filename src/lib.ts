@@ -11,7 +11,7 @@ function create_UUID(){
 }
 
 async function post_article(article: Article) {
-    const response = await fetch(`${BASE_URL}/api/article`, {
+    const response = await fetch(`${BASE_URL}/api/articles`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -22,7 +22,7 @@ async function post_article(article: Article) {
 }
 
 async function get_articles(): Promise<Article[]> {
-    const response = await fetch(`${BASE_URL}/api/article`);
+    const response = await fetch(`${BASE_URL}/api/articles`);
     return response.json();
 }
 
