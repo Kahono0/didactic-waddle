@@ -1,5 +1,4 @@
-import { useState } from "react";
-import Offers from "./Offers";
+import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 
 // you Need to add the following line as the SDK does not it have its *.d.ts typing files yet:
@@ -8,30 +7,59 @@ import { addressSignatureVerification, AuthData } from "@ututrust/web-components
 
 // @ts-ignore
 import { useWeb3Modal } from '@web3modal/react';
+import Articles from "./Articles";
+import { TARGET_TYPE } from "./constants";
 
-// A list of offers to be shown to the user, such as a list of products in an e-commerce app or a 
-// list of service providers in a sharing economy app. This would typically be retrieved from the 
+// A list of offers to be shown to the user, such as a list of products in an e-commerce app or a
+// list of service providers in a sharing economy app. This would typically be retrieved from the
 // app's backend. In this example provider_1 could be something like netflix.
-const OFFERS = [
+const ARTICLES = [
   {
-    name: "Paul",
-    id: "provider_1"
+    title: "Maize farming",
+    text: "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.",
+    id: "farmin_1"
   },
   {
-    name: "Jane",
-    id: "provider_2"
+    title: "Beans farming",
+    text: "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.",
+    id: "farmin_2"
   },
   {
-    name: "Ali",
-    id: "provider_3"
-  }
+    title: "Wheat farming",
+    text: "Lorem ipsum dolor sit amet, officia excepteur ex fugiat reprehenderit enim labore culpa sint ad nisi Lorem pariatur mollit ex esse exercitation amet. Nisi anim cupidatat excepteur officia. Reprehenderit nostrud nostrud ipsum Lorem est aliquip amet voluptate voluptate dolor minim nulla est proident. Nostrud officia pariatur ut officia. Sit irure elit esse ea nulla sunt ex occaecat reprehenderit commodo officia dolor Lorem duis laboris cupidatat officia voluptate. Culpa proident adipisicing id nulla nisi laboris ex in Lorem sunt duis officia eiusmod. Aliqua reprehenderit commodo ex non excepteur duis sunt velit enim. Voluptate laboris sint cupidatat ullamco ut ea consectetur et est culpa et culpa duis.",
+    id: "farmin_3"
+  },
 ];
 
 
 function App() {
   const { open } = useWeb3Modal()
   const [hasToken, setHasToken] = useState(false);
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
   let overrideApiUrl = process.env.REACT_APP_API_URL;
+
+
+  //check if metamasl is installed
+  const isMetaMaskInstalled = () => {
+    const { ethereum } = window as any;
+    return Boolean(ethereum && ethereum.isMetaMask);
+    };
+
+    console.log(`MetaMask is installed: ${isMetaMaskInstalled()}`);
+
+    //check if wallet is connected
+    const connectWallet = async () => {
+        const { ethereum } = window as any;
+        //get address
+        const accounts = await ethereum.request({ method: 'eth_accounts' });
+        //check if address is present
+        if (accounts.length === 0) {
+            await open();
+        } else {
+            setIsWalletConnected(true);
+        }
+    };
+
 
   const triggerUtuIdentityDataSDKEvent = (
     identityData: AuthData
@@ -57,7 +85,7 @@ function App() {
       },
       body: JSON.stringify({
         name: offer.id,
-        type: "provider",
+        type: TARGET_TYPE,
         ids: {
           uuid: ethers.utils
             .id(offer.id)
@@ -92,38 +120,37 @@ function App() {
     }
 
     // The initEntity call is necessary to map the offers in a remote neo4j db
-    for (let i = 0; i < OFFERS.length; i++) {
-      await initEntity(authDataResponse, OFFERS[i]);
+    for (let i = 0; i < ARTICLES.length; i++) {
+      await initEntity(authDataResponse, ARTICLES[i]);
     }
 
-    // this passes the JWT token info to all parts of the SDK. Expect this SDK method to be 
+    // this passes the JWT token info to all parts of the SDK. Expect this SDK method to be
     // refactored into the SDK addressSignatureVerification in later versions of the SDK.
     triggerUtuIdentityDataSDKEvent(authDataResponse);
   }
 
   return (
-    <div style={{ backgroundColor: 'antiquewhite', padding: '20px', border: '1px solid black' }}>
-      <h2>Welcome to the UTU SDK Demo for React</h2>
-      <div>
-        (1) <button type='button' style={{ cursor: 'pointer' }}
-          className={`x-utu-btn x-utu-btn-light border-radius`}
-          onClick={onConnectToWalletClick} >Connect to Wallet</button>
-      </div>
-      <div style={{ paddingTop: '10px' }}>
-        (2) <button type='button' style={{ cursor: 'pointer' }}
-          className={`x-utu-btn x-utu-btn-light border-radius`}
-          onClick={onConnectToUtuClick}>Connect to UTU</button>
-      </div>
-      <div style={{ paddingTop: '10px' }}>
-        (3) Give or Show Feedback
-      </div>
-      {
-        hasToken ? <Offers offers={OFFERS} /> :
-          <div style={{ paddingTop: '10px' }} >
-            Nothing to show until you perform Step 2
-          </div>
-      }
-    </div >
+  <>
+  {!hasToken ?
+    <>
+    <div className="get-started-cont">
+        <h1>Welcome to r/farmers</h1>
+        <p> Get information on a variety of farming practices as shared by fellow farmers</p>
+
+        { isWalletConnected ? <button type='button' className="get-started-wallet" onClick={connectWallet} disabled>Wallet Connected</button> :
+        <button type='button' className="get-started-wallet" onClick={connectWallet}>Connect Wallet</button>}
+
+        {hasToken ? <button type='button' className="get-started-utu" onClick={onConnectToUtuClick} disabled>UTU Connected</button> :
+        <button type='button' className="get-started-utu" onClick={onConnectToUtuClick}>Connect to Utu</button>}
+    </div>
+    </>
+    :
+    <>
+      <h2>Here is what farmers have to say</h2>
+         <Articles articles={ARTICLES} />
+    </>
+  }
+      </>
   )
 }
 

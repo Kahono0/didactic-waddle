@@ -1,6 +1,6 @@
 import '@ututrust/web-components';
 import { ethers } from "ethers";
-
+import {TARGET_TYPE} from "./constants";
 declare global {
   namespace JSX {
     // prevents typescript errors for the tags
@@ -25,38 +25,49 @@ let getId = (assetIdentifier: string) => {
     .toLowerCase()
 }
 
-export default function Offers(props: any) {
-  let offers = props.offers;
+export default function Articles(props: any) {
+  let articles = props.articles;
   let _window: any = window;
   let provider = _window.ethereum;
   let walletAddress = provider.selectedAddress;
+
+
 
   // @ts-ignore
   return (
     <div className="offers">
       <ul>
         {
-          offers.map((offer: any) =>
-            <li className="offer" key={offer.id}>
-              <div style={{ fontWeight: 'bold' }}>{offer.name}</div>
+          articles.map((article: any) =>
+          <>
+          <hr />
+            <div className="article" key={article.id}>
+              <div style={{ fontWeight: 'bold' }}>{article.title}</div>
+              <p>{article.text}</p>
+              <div className='feedback'>
               <x-utu-root
                 source-uuid={walletAddress}
-                target-type="provider"
-                target-uuids={getId(offer.id)}>
+                target-type={TARGET_TYPE}
+                target-uuids={getId(article.id)}
+                >
                 <x-utu-recommendation
-                  target-uuid={getId(offer.id)}
-                  style={{ marginTop: "-20px" }} />
+                  target-uuid={getId(article.id)}
+                  style={{
+                   }}
+                />
               </x-utu-root>
               <br />
               <x-utu-feedback-details-popup
-                target-uuid={getId(offer.id)}
+                target-uuid={getId(article.id)}
                 source-uuid={walletAddress}
               />
               <x-utu-feedback-form-popup
                 source-uuid={walletAddress}
-                target-uuid={getId(offer.id)}
+                target-uuid={getId(article.id)}
                 transaction-id={5} />
-            </li>
+                </div>
+            </div>
+            </>
           )
         }
       </ul>

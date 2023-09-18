@@ -5,6 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+    background-color: rgba(255, 221, 51, 0.15);
+    min-height: 100vh;
 }
 
 code {
@@ -13,9 +15,30 @@ code {
 }
 
 .offer {
-  display: inline-block;
-  padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
+.offers{
+    width: 70%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    height: 80vh;
+    overflow-y: scroll;
+
+}
+
+.feedback {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    }
+
 
 input[type=text] {
   border-radius: 10px;
@@ -25,4 +48,45 @@ input[type=text] {
   border-left: 30px;
   width: 500px;
   font-weight: 300;
+}
+
+.get-started-cont {
+    width: 500px;
+    margin:7rem  auto;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+
+}
+
+.get-started-cont h1 {
+    text-align: center;
+}
+
+.get-started-btn{
+    text-align: center;
+}
+
+.get-started-wallet {
+    background-color: #FFDD33;
+    border: none;
+    border-radius: 5px;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.get-started-utu {
+    background-color: white;
+    border: 2px solid #FFDD33;
+    border-radius: 5px;
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
 }

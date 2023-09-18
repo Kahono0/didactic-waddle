@@ -11,7 +11,7 @@ import { createRoot } from 'react-dom/client';
 const chains = [arbitrum, mainnet, polygon];
 
 // Change this projectId to your one - see instructions in README.md
-const projectId = "ed0689b91e26b121d6a6145437c7b857";
+const projectId = "d1541bd048202613709f6ff4d62e9886";
 
 const { publicClient } = configureChains(chains, [w3mProvider({ projectId })])
 
