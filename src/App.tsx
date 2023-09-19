@@ -60,9 +60,11 @@ function App() {
                 setArticles([...res, ...articles]);
             });
         }
+
     }, []);
 
-  //check if metamasl is installed
+
+    //check if metamasl is installed
   const isMetaMaskInstalled = () => {
     const { ethereum } = window as any;
     return Boolean(ethereum && ethereum.isMetaMask);
@@ -81,7 +83,10 @@ function App() {
         } else {
             setIsWalletConnected(true);
         }
+
     };
+
+
 
 
   const triggerUtuIdentityDataSDKEvent = (
@@ -144,6 +149,11 @@ function App() {
       setHasToken(true);
     }
 
+    get_articles().then((res) => {
+        setArticles([...res, ...articles]);
+    });
+
+
     // this passes the JWT token info to all parts of the SDK. Expect this SDK method to be
     // refactored into the SDK addressSignatureVerification in later versions of the SDK.
     triggerUtuIdentityDataSDKEvent(authDataResponse);
@@ -196,9 +206,9 @@ function App() {
     </>
     :
     <>
-      <h2>Here is what farmers have to say</h2>
+      <h2 className='heading'>Here is what farmers have to say</h2>
       <div className="home">
-         <Articles articles={articles} />
+         <Articles articles={articles}/>
          <Post handleSubmit={handleSubmit}/>
         </div>
     </>
